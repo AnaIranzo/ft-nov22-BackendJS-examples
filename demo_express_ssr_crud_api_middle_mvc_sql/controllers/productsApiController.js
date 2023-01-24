@@ -1,24 +1,40 @@
 // Controlador - Lógica de negocio de la app
-const fetch = require('node-fetch');
+
+//importar model
+const Product = require('../models/products')
 
 const getProducts = async (req,res) => {
     if (req.params.id) { // con ID
         try {
-            let response = await fetch(`https://fakestoreapi.com/products/${req.params.id}`); //{}
-            let products = await response.json(); //{}
-            res.status(200).json(products); // Respuesta de la API para 1 producto
+            
+            let product = await Product.find({id:req.params.id},'-_id -__v'); // find({})devuelve por id menos los especificados despues de la coma (proyeccion)
+            //let products = await Product.find({}, {"_id" : 0,"__v":0}); // otra manera con 0 le indicamos que no lo muestre 1 que si
+            if (product.length > 0){
+                res.status(200).json(product[0]); // Respuesta de la API para 1 producto, no un array de objetos
+            }else{
+                res.status(404).json({msj: "producto no encontrado con ID"  + req.params.id});
+            }
+
+            
         }
-        catch (error) {
-            console.log(`ERROR: ${error.stack}`);
+        catch (err) {
+        
+            res.status(400).json({
+                msj: err.message
+        });
         }
     } else { // sin ID --> TODOS los products
         try {
-            let response = await fetch(`https://fakestoreapi.com/products`); // []
-            let products = await response.json(); // []
-            res.status(200).json(products); // Respuesta de la API para muchos productos
+            
+            
+        let products = await Product.find({},'-_id -__v'); // find({})devuelve todos
+            res.status(200).json(products); // Respuesta de la API para todos productos
         }
-        catch (error) {
-            console.log(`ERROR: ${error.stack}`);
+        catch (err) {
+        
+            res.status(400).json({
+                msj: err.message
+        });
         }
     }
 }
@@ -27,25 +43,26 @@ const createProduct = async (req,res) => {
     console.log("Esto es el console.log de lo que introducimos por postman", req.body); // Objeto recibido de producto nuevo
     const newProduct = req.body; // {} nuevo producto a guardar
 
-    // Líneas
-    // para guardar 
-    // en una BBDD SQL o MongoDB
+    try{
+        // para guardar en una BBDD MongoDB
+        let response = await new Product(newProduct)//llamada asincrona a la bbdd 
 
-    let response = await fetch('https://fakestoreapi.com/products', {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newProduct)
-    })
-    let answer = await response.json(); // objeto de vuelta de la petición
-    console.log("Este es el console.log de lo que devuelve la api", answer);
+        let answer = await response.save(); // objeto de vuelta de la petición de guardar en la bbdd, confirmas que se guarda
+        console.log("Este es el console.log de lo que devuelve la api", answer);
 
-    res.status(201).json({
-        msj: `Producto ${answer.title} guardado en el sistema con ID: ${answer.id}`,
+        res.status(201).json({
+            msj: `Producto ${answer.title} guardado en el sistema con ID: ${answer.id}`,
         "product": answer
     });
+    }catch(err){
+        console.log("Este es el error que devuelve la api", err.message);
+        res.status(400).json({
+            msj: err.message
+    });
+    }
+    
+
+    
 }
 
 const deleteProduct = async (req,res)=>{

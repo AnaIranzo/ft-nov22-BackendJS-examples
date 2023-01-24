@@ -21,7 +21,8 @@ productsApiRouter.get('/:id?',productsApiController.getProducts);
 }
 */
 
-// POST http://localhost:3000/api/products
+// POST http://localhost:3000/api/products?API_KEY=123abc
+
 productsApiRouter.post('/',checkApiKey,productsApiController.createProduct);
 
 // DELETE
