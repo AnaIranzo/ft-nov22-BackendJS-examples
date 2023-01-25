@@ -1,3 +1,4 @@
+//queries sql
 const queries = {
     getEntriesByEmail: `
     SELECT e.title,e.content,e.date,e.category,a.name,a.surname,a.image

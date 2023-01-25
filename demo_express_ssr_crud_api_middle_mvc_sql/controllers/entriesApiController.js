@@ -1,3 +1,4 @@
+//controller entries sql
 const entry = require('../models/entries'); // Importar el modelo de la BBDD
 
 //getEntries

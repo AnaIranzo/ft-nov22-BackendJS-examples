@@ -1,5 +1,5 @@
 // Controlador - Lógica de negocio de la app
-
+// controller products mongodb
 //importar model
 const Product = require('../models/products')
 

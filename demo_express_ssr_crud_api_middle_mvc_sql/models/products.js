@@ -1,5 +1,4 @@
-
-
+//productos para bbdd mongodb
 
 const mongoose = require('mongoose');
 

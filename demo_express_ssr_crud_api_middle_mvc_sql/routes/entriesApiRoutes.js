@@ -1,5 +1,5 @@
 const express = require('express');
-// Rutas de productos
+// Rutas de entries bbdd sql
 const entriesApiController = require("../controllers/entriesApiController");
 const entriesApiRouter = express.Router();
 

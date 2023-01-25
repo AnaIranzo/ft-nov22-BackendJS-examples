@@ -1,4 +1,4 @@
-//prueba de conectividad con mongo 
+//Este archivo lo usamos para probar la conectividad con mongo, luego no lo usamos mas.
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";//puerto que usa mongo para trabajar
 
