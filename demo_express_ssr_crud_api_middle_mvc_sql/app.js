@@ -14,6 +14,9 @@ const entriesApiRoutes = require('./routes/entriesApiRoutes');
 
 const app = express()
 const port = 3000
+const swaggerUi = require('swagger-ui-express');//Requiere libreria de Swagger (La UI)
+
+const swaggerDocument = require('./swagger.json'); //Requiere ruta relativa del json que contiene la documentación de la API
 
 // Template engine
 app.set('view engine', 'pug');
@@ -23,6 +26,9 @@ app.set('views', './views');
 app.use(express.json()); // Habilitar tipo de dato a recibir
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+//Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));//Endpoint que servirá la documentación en el navegador, se le pasa la variable que apunta al .json que contiene la documentación
 
 app.get('/', (req, res) => {
     const calc = calculator.add(2, 2);
